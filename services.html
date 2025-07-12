@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Services | Tanish Khan</title>
+  <link rel="stylesheet" href="style.css" />
+   <style>
+    /* Reset styles and default fonts */
+ /* Reset styles and default fonts */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #121212;
+  color: white;
+  line-height: 1.6;
+  overflow-x: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Added base font */
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+/* Header Styles - FIXED STRUCTURE */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px; /* Added horizontal padding */
+  position: sticky;
+  top: 0;
+  background: rgba(18, 18, 18, 0.95);
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.logo {
+  font-size: 32px;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(45deg, #00bcd4, #006064);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-decoration: none; /* Added for logo link */
+}
+
+nav {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-list {
+  display: flex;
+  gap: 20px;
+  list-style: none; /* Remove bullet points */
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  transition: color 0.3s;
+  position: relative;
+}
+
+nav a:hover {
+  color: #00bcd4;
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background: #00bcd4;
+  transition: width 0.3s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+/* Hero Section - FIXED SELECTOR */
+.section-hero { /* Changed from .hero to match HTML */
+  text-align: center;
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.section-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0,188,212,0.1) 0%, rgba(0,0,0,0) 70%);
+  z-index: -1;
+}
+
+.section-hero h1 {
+  font-size: 60px;
+  margin-bottom: 20px;
+  background: linear-gradient(45deg, #00bcd4, #006064);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-hero p {
+  font-size: 24px;
+  color: #ddd;
+  margin-bottom: 30px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* SERVICES GRID STYLES - ADDED MISSING STYLES */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.service-card {
+  background: rgba(31, 31, 31, 0.7);
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-top: 4px solid #00bcd4;
+}
+
+.service-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(0, 188, 212, 0.3);
+}
+
+.service-card img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+  object-fit: contain;
+}
+
+.service-card h3 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.service-card p {
+  color: #ccc;
+  line-height: 1.7;
+}
+
+/* CTA Section - ADDED MISSING STYLES */
+.section-cta {
+  text-align: center;
+  padding: 80px 0;
+  background: radial-gradient(circle, rgba(0,188,212,0.1) 0%, rgba(0,0,0,0) 70%);
+}
+
+.section-cta h2 {
+  font-size: 42px;
+  margin-bottom: 20px;
+  background: linear-gradient(45deg, #00bcd4, #006064);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+.section-cta p {
+  font-size: 22px;
+  color: #ddd;
+  max-width: 700px;
+  margin: 0 auto 30px;
+}
+
+.btn-primary { /* Added button styles */
+  display: inline-block;
+  background: linear-gradient(45deg, #00bcd4, #006064);
+  color: #fff;
+  padding: 12px 30px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #006064, #00bcd4);
+  z-index: -1;
+  transition: transform 0.5s ease;
+  transform: scaleX(0);
+  transform-origin: right;
+}
+
+.btn-primary:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.btn-primary:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 188, 212, 0.4);
+}
+
+/* Section Heading Styles */
+.section-title {
+  font-size: 36px;
+  margin-bottom: 40px;
+  position: relative;
+  display: inline-block;
+  color: #fff;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  width: 50%;
+  height: 4px;
+  background: linear-gradient(90deg, #00bcd4, #006064);
+  bottom: -15px;
+  left: 0;
+  border-radius: 2px;
+}
+
+/* Footer Styles - ADDED CLASS */
+.footer {
+  text-align: center;
+  padding: 60px 40px;
+  background: linear-gradient(to top, #0b0b0b, #121212);
+  margin-top: 60px;
+  position: relative;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #00bcd4, #006064);
+}
+
+.footer-content p {
+  color: #aaa;
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .nav-list {
+    flex-wrap: wrap;
+    font-weight: 100px;
+    justify-content: center;
+  }
+  
+  .section-hero h1 {
+    font-size: 40px;
+  }
+  
+  .section-hero p {
+    font-size: 20px;
+  }
+  
+  .container {
+    padding: 20px;
+  }
+  
+  section {
+    padding: 20px 0;
+  }
+  
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .section-cta h2 {
+    font-size: 32px;
+  }
+  
+  .section-cta p {
+    font-size: 18px;
+  }
+}
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <header>
+    <nav>
+      <ul class="nav-list">
+         <a href="index.html#experience">Experience</a>
+         <a href="index.html#education">Education</a>
+         <a href="index.html#skills">Skills</a>
+         <a href="index.html#resume">Resume</a>
+         <a href="certificates.html">Certifications & Achievements</a>
+         <a href="#services">Services</a>
+         <a href="index.html#about">About</a>
+         <a href="index.html#projects">Projects</a>
+         <a href="index.html#contact">Contact</a>
+      </ul>
+    </nav>
+    
+      <div class="logo">TANISH KHAN</div>
+  </header>
+
+  <!-- HERO / INTRODUCTION -->
+  <section id="services-hero" class="section-hero">
+    <div class="container">
+      <h1>What I Can Do For You</h1>
+      <p>
+        Leveraging years of software development and web design expertise, I offer end‑to‑end solutions 
+        that help businesses scale, streamline operations, and delight users.
+      </p>
+    </div>
+  </section>
+
+  <!-- SERVICES GRID -->
+  <section id="services" class="section">
+    <div class="container">
+      <h2 class="section-title">Core Services</h2>
+      <div class="services-grid">
+        <!-- Service Item -->
+        <div class="service-card">
+          <img src="web-dev.jpg" alt="Web Development Icon"/>
+          <h3>Web Application Development</h3>
+          <p>
+            Custom, responsive web apps built with modern frameworks (HTML5, CSS3, JavaScript, React) to 
+            deliver seamless user experiences across devices.
+          </p>
+        </div>
+        <!-- Service Item -->
+        <div class="service-card">
+          <img src="api.jpg" alt="API Integration Icon"/>
+          <h3>API Design & Integration</h3>
+          <p>
+            Robust RESTful and GraphQL APIs designed for performance and security, integrated smoothly 
+            with front‑end clients or third‑party services.
+          </p>
+        </div>
+        <!-- Service Item -->
+        <div class="service-card">
+          <img src="ui-ux.jpg" alt="UI/UX Design Icon"/>
+          <h3>UI/UX Consulting</h3>
+          <p>
+            User‑centered interface & interaction design, from wireframes and prototypes to polished, 
+            pixel‑perfect layouts that drive engagement.
+          </p>
+        </div>
+        <!-- Service Item -->
+        <div class="service-card">
+          <img src="dev-ops.jpg" alt="DevOps Automation Icon"/>
+          <h3>DevOps & Automation</h3>
+          <p>
+            CI/CD pipelines, infrastructure as code (Terraform, Docker), and monitoring solutions to 
+            ensure reliability and rapid delivery.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALL TO ACTION -->
+  <section id="cta" class="section-cta">
+    <div class="container">
+      <h2>Ready to Get Started?</h2>
+      <p>Let’s discuss how we can work together to achieve your goals.</p>
+      <a href="index.html#contact" class="btn-primary">Get In Touch</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-content">
+      <p>© 2025 Tanish Khan. All rights reserved.</p>
+      <p>Designed and developed with ❤️ by Tanish Khan</p>
+    </div>
+  </footer>
+</body>
+</html>
