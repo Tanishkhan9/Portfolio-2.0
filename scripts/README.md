@@ -1,0 +1,1 @@
+Store JS helper files here if you want to reorganize. Current runtime script is `data-render.js` at project root. Move it here and update `index.html` if desired.

@@ -1,0 +1,21 @@
+{
+  "skills": [
+    { "category": "Programming Languages", "items": [
+      { "name": "HTML/CSS", "level": "90%" },
+      { "name": "JavaScript", "level": "75%" },
+      { "name": "Python", "level": "80%" },
+      { "name": "C/C++", "level": "85%" }
+    ]},
+    { "category": "Tools & Technologies", "items": [
+      { "name": "Git/GitHub", "level": "85%" },
+      { "name": "Responsive Design", "level": "90%" },
+      { "name": "CSS Flexbox/Grid", "level": "88%" }
+    ]},
+    { "category": "Additional Skills", "items": [
+      { "name": "Machine Learning", "level": "65%" },
+      { "name": "Jupyter Notebook", "level": "70%" },
+      { "name": "Ollama", "level": "40%" },
+      { "name": "Flutter", "level": "50%" }
+    ]}
+  ]
+}

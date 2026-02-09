@@ -1,0 +1,12 @@
+{
+  "name": "tanish-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "vercel --prod",
+    "dev": "vercel dev"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}

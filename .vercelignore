@@ -1,0 +1,4 @@
+*.md
+*.log
+node_modules/
+.vscode/

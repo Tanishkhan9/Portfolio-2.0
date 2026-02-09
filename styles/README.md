@@ -1,0 +1,1 @@
+Store reusable CSS files here (e.g., `main.css`, `theme.css`). To reorganize, move inline styles from `index.html` into `styles/main.css` and reference it in the head.

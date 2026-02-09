@@ -1,0 +1,22 @@
+{
+  "projects": [
+    {
+      "title": "Python Automation Assistant",
+      "description": "A Python-based automation assistant that performs repetitive tasks, file operations, and simple web automation scripts to streamline workflows. Built with a modular structure for adding new automation plugins.",
+      "live": "",
+      "source": ""
+    },
+    {
+      "title": "Personal Portfolio Website",
+      "description": "A responsive portfolio website built with HTML5, CSS3, and JavaScript showcasing my skills and projects.",
+      "live": "https://tanishkhan9.github.io/MY-Portfolio/",
+      "source": ""
+    },
+    {
+      "title": "E-commerce Landing Site",
+      "description": "Responsive landing page for an e-commerce site with product showcase and testimonials.",
+      "live": "https://tanishkhan9.github.io/My-website/",
+      "source": "https://github.com/Tanishkhan9/My-website"
+    }
+  ]
+}
