@@ -89,7 +89,7 @@ p {
   border-radius: 50%;
   background-image: radial-gradient(
     circle farthest-corner at 50% 50%,
-    var(--grid-highlight, rgba(0, 170, 255, 0.3)) 10%,
+    var(--grid-highlight, rgba(1, 8, 11, 0.3)) 10%,
     transparent 70%
   );
   position: absolute;
