@@ -24,18 +24,6 @@ async function loadCertifications() {
       list.appendChild(li);
     }
   });
-
-  // Setup search/filter input if present
-  const search = document.getElementById('cert-search');
-  if (search) {
-    search.addEventListener('input', () => {
-      const q = search.value.trim().toLowerCase();
-      Array.from(list.querySelectorAll('li')).forEach(li => {
-        const text = li.textContent.toLowerCase();
-        li.style.display = text.includes(q) ? '' : 'none';
-      });
-    });
-  }
 }
 
 // Load skills and append an "Additional Skills" category if present
@@ -104,34 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
   loadCertifications();
   loadSkills();
   loadProjects();
-});
-
-// certificate block buttons behavior
-document.addEventListener('DOMContentLoaded', () => {
-  const blocks = document.querySelectorAll('.cert-block');
-  const certList = document.querySelector('.cert-list');
-  const achieveWrap = document.querySelector('.cards-grid');
-  blocks.forEach(b => b.addEventListener('click', () => {
-    blocks.forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    const f = b.dataset.filter;
-    if (f === 'all') {
-      if (certList) certList.style.display = '';
-      if (achieveWrap) achieveWrap.style.display = '';
-    } else if (f === 'certs') {
-      if (certList) certList.style.display = '';
-      if (achieveWrap) achieveWrap.style.display = 'none';
-      certList.scrollIntoView({behavior:'smooth'});
-    } else if (f === 'achieve') {
-      if (certList) certList.style.display = 'none';
-      if (achieveWrap) achieveWrap.style.display = '';
-      if (achieveWrap) achieveWrap.scrollIntoView({behavior:'smooth'});
-    } else if (f === 'skills' || f === 'projects') {
-      const target = b.dataset.target;
-      const el = document.querySelector(target);
-      if (el) el.scrollIntoView({behavior:'smooth'});
-    }
-  }));
 });
 
 // tune animations for new UI

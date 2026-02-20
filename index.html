@@ -16,66 +16,531 @@
     html, body { height: 100%; }
     body {
       margin: 0; padding: 24px 0; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
-      --bg: #071426; --card: rgba(255,255,255,0.03); --muted:#9aa4b2; --accent:#4ee0c2;
-      color: #e6eef6; background: linear-gradient(180deg,#061122 0%, #071426 60%);
+      --bg-primary: #071426;
+      --bg-secondary: #061122;
+      --bg-gradient: linear-gradient(180deg, #061122 0%, #071426 60%);
+      --card-glass: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.04);
+      --card-hover-border: rgba(78, 224, 194, 0.3);
+      --accent: #4ee0c2;
+      --accent-gradient: linear-gradient(90deg, #4ee0c2, #2ec6b4);
+      --text-primary: #e6eef6;
+      --text-muted: #9aa4b2;
+      --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.3);
+      --shadow-glass-hover: 0 12px 40px rgba(0, 0, 0, 0.4);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      color: var(--text-primary); background: var(--bg-gradient);
       -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; line-height: 1.5; overflow-x: hidden;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
     }
 
     .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
 
     /* Header */
-    header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 0; }
+    header { 
+      display:flex; 
+      align-items:center; 
+      justify-content:space-between; 
+      gap:16px; 
+      padding:12px 0; 
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7, 20, 38, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
     .logo { font-weight:700; font-size:20px; letter-spacing:0.8px; color:var(--accent); }
     nav { display:flex; gap:12px; align-items:center; }
-    nav a { color:var(--muted); text-decoration:none; padding:8px 12px; border-radius:8px; font-weight:600; font-size:14px; }
+    nav a { color:var(--muted); text-decoration:none; padding:8px 12px; border-radius:8px; font-weight:600; font-size:14px; transition: all 0.3s ease; }
     nav a:hover { background:var(--card); color:#fff; transform:translateY(-2px); }
+    nav a.active { background:linear-gradient(90deg,var(--accent),#2ec6b4); color:#02121a; }
+    
+    /* Mobile hamburger menu */
+    .hamburger {
+      display:none;
+      flex-direction:column;
+      gap:5px;
+      cursor:pointer;
+      padding:8px;
+      border-radius:8px;
+      transition:background 0.3s ease;
+    }
+    .hamburger:hover { background:var(--card); }
+    .hamburger span {
+      width:24px;
+      height:2px;
+      background:var(--accent);
+      border-radius:2px;
+      transition:all 0.3s ease;
+    }
+    .hamburger.active span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+    .hamburger.active span:nth-child(2) { opacity:0; }
+    .hamburger.active span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+    
+    /* Mobile navigation dropdown */
+    .mobile-nav {
+      display:none;
+      flex-direction:column;
+      gap:8px;
+      padding:16px 0;
+      background:rgba(7, 20, 38, 0.95);
+      border-bottom:1px solid rgba(255,255,255,0.04);
+    }
+    .mobile-nav a {
+      display:block;
+      padding:12px 16px;
+      color:var(--muted);
+      text-decoration:none;
+      border-radius:8px;
+      font-weight:600;
+      font-size:14px;
+      transition:all 0.3s ease;
+    }
+    .mobile-nav a:hover { background:var(--card); color:#fff; }
+    .mobile-nav a.active { background:linear-gradient(90deg,var(--accent),#2ec6b4); color:#02121a; }
 
+    /* Smooth scroll behavior */
+    html { scroll-behavior: smooth; }
+    
+    /* Scroll to top button */
+    .scroll-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(90deg, var(--accent), #2ec6b4);
+      color: #02121a;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 24px rgba(78, 224, 194, 0.3);
+      z-index: 999;
+    }
+    .scroll-to-top.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    .scroll-to-top:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 32px rgba(78, 224, 194, 0.5);
+    }
+    .scroll-to-top i {
+      pointer-events: none;
+    }
+    
+    /* Animation on scroll */
+    .animate { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .animate.in-view { opacity: 1; transform: translateY(0); }
+    
+    /* Cross-browser compatibility */
+    .btn, .card, .project-card, .contact-card, nav a, .chip, .cert-block {
+      -webkit-transition: all 0.3s ease;
+      -moz-transition: all 0.3s ease;
+      -o-transition: all 0.3s ease;
+      transition: all 0.3s ease;
+    }
+    .skill-progress {
+      -webkit-transition: width 1s ease;
+      -moz-transition: width 1s ease;
+      -o-transition: width 1s ease;
+      transition: width 1s ease;
+    }
+    
     /* Hero */
-    .hero { display:grid; grid-template-columns: 1fr 380px; gap:28px; align-items:center; padding:40px 0; }
+    .hero { 
+      display:grid; 
+      grid-template-columns: 1fr 380px; 
+      gap:28px; 
+      align-items:center; 
+      padding:40px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 40%, rgba(78, 224, 194, 0.08) 0%, transparent 40%),
+                  radial-gradient(circle at 70% 60%, rgba(46, 198, 180, 0.06) 0%, transparent 40%);
+      animation: parallaxMove 20s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(78, 224, 194, 0.12) 0%, transparent 60%);
+      border-radius: 50%;
+      animation: floatBlob 15s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+    .hero > * { position: relative; z-index: 1; }
+    
+    /* Floating Gradient Blobs */
+    .floating-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.6;
+      z-index: 0;
+      animation: floatBlob 20s ease-in-out infinite alternate;
+    }
+    .blob-1 {
+      top: 10%;
+      left: -10%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(78, 224, 194, 0.4) 0%, transparent 70%);
+      animation-duration: 18s;
+    }
+    .blob-2 {
+      top: 40%;
+      right: -5%;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(46, 198, 180, 0.35) 0%, transparent 70%);
+      animation-duration: 22s;
+      animation-direction: alternate-reverse;
+    }
+    .blob-3 {
+      bottom: 15%;
+      left: 20%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(78, 224, 194, 0.3) 0%, transparent 70%);
+      animation-duration: 25s;
+    }
+    .blob-4 {
+      bottom: 5%;
+      right: 15%;
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(46, 198, 180, 0.25) 0%, transparent 70%);
+      animation-duration: 28s;
+      animation-direction: alternate-reverse;
+    }
+    @keyframes parallaxMove {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(50px, 30px) rotate(5deg); }
+    }
+    @keyframes floatBlob {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, -50px) scale(1.2); }
+    }
     .hero h1 { font-size:42px; margin:0 0 8px; color:#fff; }
     .hero p { color:var(--muted); font-size:18px; margin:0 0 18px; }
-    .btn { background:var(--accent); color:#02121a; border:none; padding:12px 18px; border-radius:10px; cursor:pointer; font-weight:700; }
+    .typing-cursor { display:inline-block; width:2px; height:1.2em; background:var(--accent); vertical-align:middle; animation:blink 1s infinite; margin-left:2px; }
+    @keyframes blink { 0%, 50% { opacity:1; } 51%, 100% { opacity:0; } }
+    .typing-text-container { display:inline-flex; align-items:center; }
+    .typing-text-container span { transition: opacity 0.3s ease; }
+    .typing-text-container span.fade-out { opacity:0; }
+    .btn { background:var(--accent); color:#02121a; border:none; padding:12px 18px; border-radius:10px; cursor:pointer; font-weight:700; transition: all 0.3s ease; }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(78, 224, 194, 0.3); }
+    .btn.ghost { background:transparent; border:1px solid var(--accent); color:var(--accent); }
+    .btn.ghost:hover { background:rgba(78, 224, 194, 0.1); }
 
     /* Section & cards */
     section { margin-bottom:28px; }
     section > h2 { font-size:20px; color:#dff6ef; margin-bottom:12px; }
-    .card { background:var(--card); padding:18px; border-radius:12px; border:1px solid rgba(255,255,255,0.04); }
+    .card { 
+      background: var(--card-glass);
+      padding:18px; 
+      border-radius:12px; 
+      border:1px solid var(--card-border);
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-glass-hover);
+      border-color: var(--card-hover-border);
+    }
 
     /* Hero chips (heading blocks) */
     .hero-chips{ display:flex; gap:10px; flex-wrap:wrap; margin:12px 0 8px; }
-    .chip{ background:rgba(255,255,255,0.03); color:var(--muted); border:1px solid rgba(255,255,255,0.04); padding:8px 12px; border-radius:999px; cursor:pointer; font-weight:700; }
-    .chip:hover{ background:linear-gradient(90deg,var(--accent),#2ec6b4); color:#02121a; }
+    .chip{ 
+      background: var(--card-glass);
+      color:var(--text-muted); 
+      border:1px solid var(--card-border); 
+      padding:8px 12px; 
+      border-radius:999px; 
+      cursor:pointer; 
+      font-weight:700;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: var(--transition);
+    }
+    .chip:hover{
+      background:var(--accent-gradient); 
+      color:#02121a; 
+      border-color: transparent;
+      box-shadow: 0 8px 24px rgba(78, 224, 194, 0.3);
+    }
 
     /* small circular avatar in hero-right */
-    .hero-card{ display:flex; flex-direction:column; align-items:center; gap:8px; }
+    .hero-card{ 
+      display:flex; 
+      flex-direction:column; 
+      align-items:center; 
+      gap:8px; 
+      padding:20px;
+      background: var(--card-glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius:20px;
+      border:1px solid var(--card-border);
+      box-shadow: var(--shadow-glass);
+    }
+    .hero-card:hover {
+      border-color: var(--card-hover-border);
+      box-shadow: var(--shadow-glass-hover);
+    }
     .hero-img{ width:96px; height:96px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,0.06); }
 
     /* Skills */
-    .skills-container { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
-    .skill-name { font-weight:600; color:#dff6ef; display:flex; justify-content:space-between; }
-    .skill-bar { height:10px; background:rgba(255,255,255,0.04); border-radius:999px; overflow:hidden; margin-top:8px; }
-    .skill-progress { height:100%; background:linear-gradient(90deg,var(--accent),#18bfae); }
+    .skills-container { display:flex; flex-direction:column; gap:24px; }
+    .skill-category { 
+      background: var(--card-glass);
+      padding:24px;
+      border-radius:16px;
+      border:1px solid var(--card-border);
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .skill-category:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-glass-hover);
+      border-color: var(--card-hover-border);
+    }
+    .skill-category h3 { 
+      font-size:16px; 
+      color:#fff; 
+      margin:0 0 20px; 
+      padding:12px 16px;
+      background:rgba(78, 224, 194, 0.08);
+      border-radius:10px;
+      border-left:3px solid var(--accent);
+      font-weight:700;
+      letter-spacing:0.5px;
+    }
+    .skill-item { display:flex; flex-direction:column; gap:8px; margin-bottom:14px; padding:12px; background:rgba(255,255,255,0.02); border-radius:8px; transition: all 0.3s ease; cursor:pointer; position:relative; overflow:hidden; }
+    .skill-item:hover { background:rgba(78, 224, 194, 0.08); transform: translateX(4px); box-shadow: 0 4px 12px rgba(78, 224, 194, 0.15); }
+    .skill-item:active { transform: scale(0.98); }
+    .skill-item.active { background:rgba(78, 224, 194, 0.12); border-left:3px solid var(--accent); }
+    .skill-item.active::after { content:''; position:absolute; left:0; top:0; height:100%; width:3px; background:var(--accent); transform:scaleY(1); }
+    .skill-item:last-child { margin-bottom:0; }
+    .skill-item::after { content:''; position:absolute; left:0; top:0; height:100%; width:3px; background:var(--accent); transform:scaleY(0); transition:transform 0.3s ease; }
+    .skill-details { display:none; padding:10px 0 0 0; margin-top:8px; border-top:1px solid rgba(78, 224, 194, 0.2); }
+    .skill-item.active .skill-details { display:block; animation:fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
+    .skill-name { font-weight:600; color:#fff; display:flex; align-items:center; gap:10px; font-size:14px; }
+    .skill-icon { color:var(--accent); font-size:16px; min-width:20px; text-align:center; }
+    .skill-percentage { margin-left:auto; color:var(--accent); font-size:13px; font-weight:700; }
+    .skill-bar { height:10px; background:rgba(255,255,255,0.04); border-radius:999px; overflow:hidden; transition: all 0.3s ease; }
+    .skill-category:hover .skill-bar { transform: scale(1.02); }
+    .skill-progress { height:100%; background:linear-gradient(90deg,var(--accent),#18bfae); border-radius:999px; transition: width 1s ease; }
 
     /* Projects grid */
     .projects-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
-    .project-card { padding:16px; border-radius:12px; background:transparent; }
+    .project-card { 
+      padding:16px; 
+      border-radius:12px; 
+      background: var(--card-glass);
+      border:1px solid var(--card-border);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .project-thumb {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+      opacity: 0.85;
+    }
+    .project-card:hover .project-thumb {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg,var(--accent),#2ec6b4);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .project-card:hover {
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 0 20px 50px rgba(78, 224, 194, 0.25);
+      border-color: var(--card-hover-border);
+    }
+    .project-card:hover::before { transform: scaleX(1); }
+    .project-card h3 { color:#fff; margin:0 0 10px; font-size:16px; }
+    .project-card p { color:var(--text-muted); font-size:14px; margin:0 0 12px; line-height:1.5; }
+    .tech-stack { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+    .tech-badge { 
+      font-size:11px; 
+      font-weight:600; 
+      padding:4px 10px; 
+      border-radius:999px; 
+      background:rgba(78, 224, 194, 0.1); 
+      color:var(--accent); 
+      border:1px solid rgba(78, 224, 194, 0.2);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .project-card:hover .tech-badge {
+      background:rgba(78, 224, 194, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(78, 224, 194, 0.2);
+    }
+    .project-links { display:flex; gap:12px; flex-wrap:wrap; }
+    .project-links a { 
+      color:var(--accent); 
+      text-decoration:none; 
+      font-size:13px; 
+      font-weight:600;
+      display:flex; 
+      align-items:center; 
+      gap:6px;
+      padding:6px 10px;
+      background:rgba(78, 224, 194, 0.08);
+      border-radius:6px;
+      transition: all 0.3s ease;
+    }
+    .project-card:hover .project-links a {
+      background:rgba(78, 224, 194, 0.15);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(78, 224, 194, 0.15);
+    }
 
     /* Certificates list */
     .cert-list { list-style:none; padding:0; margin:12px 0 0 0; display:grid; gap:8px; }
-    .cert-list li { padding:10px 12px; border-radius:10px; background:rgba(255,255,255,0.02); color:var(--muted); font-size:14px; }
+    .cert-list li { 
+      padding:10px 12px; 
+      border-radius:10px; 
+      background: var(--card-glass);
+      color:var(--text-muted); 
+      font-size:14px;
+      border:1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: var(--transition);
+    }
+    .cert-list li:hover {
+      transform: translateX(8px);
+      border-color: var(--accent);
+      background: rgba(78, 224, 194, 0.05);
+    }
 
     /* Achievements cards */
     .cards-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-top:12px; }
-    .achievement-card { padding:14px; border-radius:12px; background:transparent; }
+    .achievement-card { 
+      padding:14px; 
+      border-radius:12px; 
+      background: var(--card-glass);
+      border:1px solid var(--card-border);
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .achievement-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-glass-hover);
+      border-color: var(--card-hover-border);
+    }
     .achievement-card h4 { margin:0 0 6px; color:var(--accent); }
 
     /* Blocks under certificates heading */
     .cert-blocks{ display:flex; gap:10px; flex-wrap:wrap; margin:8px 0 12px 0; }
-    .cert-block{ background:rgba(255,255,255,0.03); color:var(--muted); border:1px solid rgba(255,255,255,0.03); padding:8px 12px; border-radius:999px; cursor:pointer; font-weight:700; }
-    .cert-block:hover, .cert-block.active{ background:linear-gradient(90deg,var(--accent),#2ec6b4); color:#02121a; }
+    .cert-block{ 
+      background: var(--card-glass);
+      color:var(--text-muted); 
+      border:1px solid var(--card-border); 
+      padding:8px 12px; 
+      border-radius:999px; 
+      cursor:pointer; 
+      font-weight:700;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: var(--transition);
+    }
+    .cert-block:hover, .cert-block.active{ 
+      background:var(--accent-gradient); 
+      color:#02121a; 
+      border-color: transparent;
+      box-shadow: 0 8px 24px rgba(78, 224, 194, 0.3);
+    }
 
     /* Contact tabs */
     #contact .btn { border-radius:8px; }
+    .contact-info { display:grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:16px; }
+    .contact-card { 
+      background: var(--card-glass);
+      padding:20px; 
+      border-radius:12px; 
+      text-align:center;
+      border:1px solid var(--card-border);
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .contact-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-glass-hover);
+      border-color: var(--card-hover-border);
+    }
+    .contact-card i { 
+      font-size:28px; 
+      color:var(--accent); 
+      margin-bottom:10px;
+      display:block;
+    }
+    .contact-card h3 { 
+      font-size:14px; 
+      color:#fff; 
+      margin:0 0 8px;
+    }
+    .contact-card a, .contact-card p { 
+      color:var(--text-muted); 
+      font-size:14px; 
+      margin:0; 
+      text-decoration:none;
+    }
+    .contact-card a:hover { color:var(--accent); }
 
     /* Footer */
     .footer { margin-top:30px; padding:28px 12px; text-align:center; color:var(--muted); }
@@ -87,7 +552,48 @@
     .social-links a i { pointer-events:none; }
 
     /* Responsive */
-    @media (max-width:900px) { .hero { grid-template-columns:1fr; text-align:left; } .skills-container { grid-template-columns:1fr; } }
+    @media (max-width:900px) { 
+      .hero { grid-template-columns:1fr; text-align:left; } 
+      .skills-container { grid-template-columns:1fr; }
+      .hero-card { display:none; }
+    }
+    @media (max-width:768px) {
+      .container { padding:16px; }
+      .hero { padding:32px 0; }
+      .hero h1 { font-size:32px; }
+      .hero p { font-size:16px; }
+      nav { display:none; }
+      .hamburger { display:flex; }
+      .logo { font-size:18px; }
+      .chip { padding:6px 10px; font-size:13px; }
+      .btn { padding:10px 14px; font-size:14px; }
+      .contact-info { grid-template-columns:1fr; }
+      .project-links a { font-size:12px; }
+    }
+    @media (min-width:769px) and (max-width:1024px) {
+      .container { max-width:900px; }
+      .hero { grid-template-columns:1fr 300px; }
+      .skills-container { grid-template-columns:1fr 1fr; }
+    }
+    @media (min-width:1025px) {
+      .container { max-width:1200px; }
+    }
+    /* Project details on hover */
+    .project-details {
+      display: none;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(78, 224, 194, 0.15);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      animation: fadeIn 0.4s ease;
+    }
+    .project-card:hover .project-details {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
@@ -107,10 +613,32 @@
         <a href="#projects">Projects</a>
         <a href="#contact">Contact</a>
       </nav>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="mobile-nav" id="mobile-nav">
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+        <a href="#education">Education</a>
+        <a href="#skills">Skills</a>
+        <a href="#resume">Resume</a>
+        <a href="#certificates">Certificates</a>
+        <a href="services.html">Services</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </div>
     </header>
 
     <!-- Hero Section with Typing Animation -->
     <section class="hero">
+      <!-- Floating Gradient Blobs -->
+      <div class="floating-blob blob-1"></div>
+      <div class="floating-blob blob-2"></div>
+      <div class="floating-blob blob-3"></div>
+      <div class="floating-blob blob-4"></div>
+      
       <div class="hero-left">
         <h1>Tanish Khan</h1>
         <p id="typing-text"></p>
@@ -128,7 +656,7 @@
 
       <div class="hero-right">
         <div class="hero-card">
-          <img src="IMG-20250613-WA0009.jpg" alt="Tanish Khan" class="hero-img">
+          <img src="public/img.jpg" alt="Tanish Khan" class="hero-img">
           <p style="margin-top:10px;color:var(--muted);font-size:14px;">B.Tech (AI) • Web & Software Developer</p>
         </div>
       </div>
@@ -184,38 +712,54 @@
           <h3>Programming Languages</h3>
           <div class="skill-item">
             <div class="skill-name">
+              <i class="fab fa-html5 skill-icon"></i>
               <span>HTML/CSS</span>
-              <span>90%</span>
+              <span class="skill-percentage">90%</span>
             </div>
             <div class="skill-bar">
               <div class="skill-progress" style="width: 90%;"></div>
             </div>
+            <div class="skill-details">
+              <p style="margin:0; color:var(--text-muted); font-size:13px; line-height:1.4;">Proficient in semantic HTML5 and modern CSS3 with experience in responsive layouts, Flexbox, Grid, and CSS animations.</p>
+            </div>
           </div>
           <div class="skill-item">
             <div class="skill-name">
+              <i class="fab fa-js-square skill-icon"></i>
               <span>JavaScript</span>
-              <span>75%</span>
+              <span class="skill-percentage">75%</span>
             </div>
             <div class="skill-bar">
               <div class="skill-progress" style="width: 75%;"></div>
             </div>
+            <div class="skill-details">
+              <p style="margin:0; color:var(--text-muted); font-size:13px; line-height:1.4;">Experienced in ES6+ features, DOM manipulation, async/await, and building interactive web applications.</p>
+            </div>
           </div>
           <div class="skill-item">
             <div class="skill-name">
+              <i class="fab fa-python skill-icon"></i>
               <span>Python</span>
-              <span>80%</span>
+              <span class="skill-percentage">80%</span>
             </div>
             <div class="skill-bar">
               <div class="skill-progress" style="width: 80%;"></div>
             </div>
+            <div class="skill-details">
+              <p style="margin:0; color:var(--text-muted); font-size:13px; line-height:1.4;">Skilled in Python programming with knowledge of data structures, algorithms, and basic machine learning concepts.</p>
+            </div>
           </div>
           <div class="skill-item">
             <div class="skill-name">
+              <i class="fab fa-cuttlefish skill-icon"></i>
               <span>C/C++</span>
-              <span>85%</span>
+              <span class="skill-percentage">85%</span>
             </div>
             <div class="skill-bar">
               <div class="skill-progress" style="width: 85%;"></div>
+            </div>
+            <div class="skill-details">
+              <p style="margin:0; color:var(--text-muted); font-size:13px; line-height:1.4;">Strong foundation in C/C++ with understanding of memory management, pointers, and object-oriented programming concepts.</p>
             </div>
           </div>
         </div>
@@ -223,29 +767,41 @@
           <h3>Tools & Technologies</h3>
           <div class="skill-item">
             <div class="skill-name">
+              <i class="fab fa-github skill-icon"></i>
               <span>Git/GitHub</span>
-              <span>85%</span>
+              <span class="skill-percentage">85%</span>
             </div>
             <div class="skill-bar">
               <div class="skill-progress" style="width: 85%;"></div>
             </div>
+            <div class="skill-details">
+              <p style="margin:0; color:var(--text-muted); font-size:13px; line-height:1.4;">Experienced in version control with Git, including branching, merging, pull requests, and collaborative development workflows.</p>
+            </div>
           </div>
           <div class="skill-item">
             <div class="skill-name">
+              <i class="fas fa-mobile-alt skill-icon"></i>
               <span>Responsive Design</span>
-              <span>90%</span>
+              <span class="skill-percentage">90%</span>
             </div>
             <div class="skill-bar">
               <div class="skill-progress" style="width: 90%;"></div>
             </div>
+            <div class="skill-details">
+              <p style="margin:0; color:var(--text-muted); font-size:13px; line-height:1.4;">Expert in creating mobile-first, responsive websites that work seamlessly across all devices and screen sizes.</p>
+            </div>
           </div>
           <div class="skill-item">
             <div class="skill-name">
+              <i class="fas fa-th-large skill-icon"></i>
               <span>CSS Flexbox/Grid</span>
-              <span>88%</span>
+              <span class="skill-percentage">88%</span>
             </div>
             <div class="skill-bar">
               <div class="skill-progress" style="width: 88%;"></div>
+            </div>
+            <div class="skill-details">
+              <p style="margin:0; color:var(--text-muted); font-size:13px; line-height:1.4;">Proficient in CSS Flexbox and Grid layouts for creating complex, responsive grid systems and alignments.</p>
             </div>
           </div>
         </div>
@@ -256,21 +812,13 @@
     <section id="resume" class="animate">
       <h2>Resume</h2>
       <p>You can download my latest resume below:</p>
-      <a href="Tanish-Resume.pdf" class="btn">Download Resume</a>
+      <a href="Resume-Tanish.pdf" class="btn">Download Resume</a>
     </section>
 
     <!-- Certifications & Achievements (migrated from certificates.html) -->
     <section id="certificates" class="animate">
       <h2>Certifications & Achievements</h2>
-      <div class="cert-blocks">
-        <button class="cert-block" data-filter="all">All</button>
-        <button class="cert-block" data-filter="certs">Certifications</button>
-        <button class="cert-block" data-filter="achieve">Achievements</button>
-        <button class="cert-block" data-filter="skills" data-target="#skills">Skills</button>
-        <button class="cert-block" data-filter="projects" data-target="#projects">Projects</button>
-      </div>
-      <p>Below are certifications and notable achievements. Use the search box to filter.</p>
-      <input id="cert-search" type="text" placeholder="Search certifications..." style="width:100%;max-width:600px;padding:10px;margin:15px 0;border-radius:8px;border:1px solid #333;background:#0f0f0f;color:#fff;">
+      <p>Below are my certifications and notable achievements:</p>
       <ul class="cert-list"></ul>
 
       <div style="margin-top:30px; background: rgba(31,31,31,0.7); padding:20px; border-radius:8px;">
@@ -291,12 +839,42 @@
           </div>
       </div>
     </section>
+    .project-details {
+      display: none;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(78, 224, 194, 0.15);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      animation: fadeIn 0.3s ease;
+    }
+    .project-card:hover .project-details {
+      display: block;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+    .project-card:hover::before { transform: scaleX(1); }
+            </div>
+            <div class="achievement-card">
+              <h4>Open Source Contributions</h4>
+              <p>Contributed to multiple open-source projects, improving code quality and adding features.</p>
+            </div>
+          </div>
+      </div>
+    </section>
 
     <!-- Projects Section -->
     <section id="projects" class="animate">
       <h2>Projects</h2>
       <div class="projects-grid">
         <div class="project-card">
+          <img src="api.jpg" alt="Personal Portfolio Website" class="project-thumb">
+          <div class="tech-stack">
+            <span class="tech-badge">HTML5</span>
+            <span class="tech-badge">CSS3</span>
+            <span class="tech-badge">JavaScript</span>
+            <span class="tech-badge">Responsive</span>
+          </div>
           <h3>Personal Portfolio Website</h3>
           <p>A responsive portfolio website built with HTML5, CSS3, and JavaScript showcasing my skills and projects. Implemented modern design principles including CSS Grid and Flexbox for layout.</p>
           <div class="project-links">
@@ -310,6 +888,13 @@
           
         </div>
         <div class="project-card">
+          <img src="web-dev.jpg" alt="E-commerce Landing Site" class="project-thumb">
+          <div class="tech-stack">
+            <span class="tech-badge">HTML5</span>
+            <span class="tech-badge">CSS3</span>
+            <span class="tech-badge">JavaScript</span>
+            <span class="tech-badge">Responsive</span>
+          </div>
           <h3>E-commerce Landing Site</h3>
           <p>Designed and developed a responsive landing page for an e-commerce site with product showcase, testimonials, and contact form. Focused on UI/UX principles and mobile-first approach.</p>
           <div class="project-links">
@@ -322,6 +907,13 @@
           </div>
         </div>
         <div class="project-card">
+          <img src="ui-ux.jpg" alt="MY CAT's website" class="project-thumb">
+          <div class="tech-stack">
+            <span class="tech-badge">HTML5</span>
+            <span class="tech-badge">CSS3</span>
+            <span class="tech-badge">JavaScript</span>
+            <span class="tech-badge">Responsive</span>
+          </div>
           <h3>MY CAT's website</h3>
           <p>A simple web page for my brother's business built with HTML, CSS and JavaScript. Showcases products with a clean, modern design and responsive layout.</p>
           <div class="project-links">
@@ -383,6 +975,11 @@
     </section>
   </div>
 
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" id="scrollToTop">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
   <!-- Footer Section -->
   
   <footer class="footer">
@@ -431,7 +1028,8 @@
       }
       
       const displayedText = currentText.substring(0, charIndex);
-      document.getElementById("typing-text").innerHTML = displayedText;
+      const cursor = isDeleting ? '' : '<span class="typing-cursor"></span>';
+      document.getElementById("typing-text").innerHTML = displayedText + cursor;
       
       if (!isDeleting && charIndex === currentText.length) {
         isDeleting = true;
@@ -439,6 +1037,11 @@
       } else if (isDeleting && charIndex === 0) {
         isDeleting = false;
         textIndex = (textIndex + 1) % texts.length;
+        // Add cursor back when starting new text
+        setTimeout(() => {
+          const cursor = '<span class="typing-cursor"></span>';
+          document.getElementById("typing-text").innerHTML = cursor;
+        }, 100);
       }
       
       setTimeout(typeEffect, typingSpeed);
@@ -448,11 +1051,45 @@
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
         e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-          behavior: 'smooth'
-        });
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
       });
     });
+
+    // Active link highlighting based on scroll position
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('nav a[href^="#"]');
+    
+    function setActiveLink() {
+      let currentSection = '';
+      const scrollPosition = window.scrollY + 150;
+      
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        const sectionId = section.getAttribute('id');
+        
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+          currentSection = sectionId;
+        }
+      });
+      
+      navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href.startsWith('#') && href.substring(1) === currentSection) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+    
+    window.addEventListener('scroll', setActiveLink);
+    window.addEventListener('load', setActiveLink);
     
     // Dynamic year in footer
     document.querySelector('.footer p').innerHTML = `&copy; ${new Date().getFullYear()} Tanish Khan. All rights reserved.`;
@@ -461,7 +1098,7 @@
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('animate');
+          entry.target.classList.add('in-view');
           observer.unobserve(entry.target);
         }
       });
@@ -469,7 +1106,7 @@
       threshold: 0.1
     });
     
-    document.querySelectorAll('section').forEach(section => {
+    document.querySelectorAll('.animate').forEach(section => {
       observer.observe(section);
     });
     
@@ -494,12 +1131,56 @@
     
     skillObserver.observe(document.getElementById('skills'));
     
+    // Scroll to top button
+    const scrollToTopBtn = document.getElementById('scrollToTop');
+    
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        scrollToTopBtn.classList.add('show');
+      } else {
+        scrollToTopBtn.classList.remove('show');
+      }
+    });
+    
+    scrollToTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
     // Start typing effect
     window.onload = function() {
       setTimeout(typeEffect, 1000);
+      
+      // Hamburger menu toggle
+      const hamburger = document.getElementById('hamburger');
+      const mobileNav = document.getElementById('mobile-nav');
+      const mobileLinks = mobileNav.querySelectorAll('a');
+      
+      hamburger.addEventListener('click', function() {
+        hamburger.classList.toggle('active');
+        mobileNav.style.display = mobileNav.style.display === 'flex' ? 'none' : 'flex';
+      });
+      
+      // Close mobile menu when a link is clicked
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          hamburger.classList.remove('active');
+          mobileNav.style.display = 'none';
+        });
+      });
+      
+      // Interactive skill cards - click to expand details
+      const skillItems = document.querySelectorAll('.skill-item');
+      skillItems.forEach(item => {
+        item.addEventListener('click', function() {
+          // Toggle active class
+          this.classList.toggle('active');
+        });
+      });
     };
   </script>
   <script src="data-render.js"></script>
 </body>
 </html>
-
