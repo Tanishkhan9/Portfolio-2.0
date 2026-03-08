@@ -11,7 +11,7 @@ async function fetchJSON(path) {
 
 // Append certifications to existing list (preserve existing items)
 async function loadCertifications() {
-  const data = await fetchJSON('public/data/certifications.json');
+  const data = await fetchJSON('data/certifications.json');
   if (!data) return;
   const list = document.querySelector('.cert-list') || document.getElementById('cert-list');
   if (!list) return;
@@ -28,7 +28,7 @@ async function loadCertifications() {
 
 // Load skills and append an "Additional Skills" category if present
 async function loadSkills() {
-  const data = await fetchJSON('public/data/skills.json');
+  const data = await fetchJSON('data/skills.json');
   if (!data) return;
   const container = document.querySelector('.skills-container');
   if (!container) return;
@@ -67,7 +67,7 @@ async function loadSkills() {
 
 // Load projects and append new ones
 async function loadProjects() {
-  const data = await fetchJSON('public/data/projects.json');
+  const data = await fetchJSON('data/projects.json');
   if (!data) return;
   const grid = document.querySelector('.projects-grid');
   if (!grid) return;

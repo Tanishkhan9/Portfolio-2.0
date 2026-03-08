@@ -250,8 +250,8 @@
       0% { transform: translate(0, 0) scale(1); }
       100% { transform: translate(30px, -50px) scale(1.2); }
     }
-    .hero h1 { font-size:42px; margin:0 0 8px; color:#fff; }
-    .hero p { color:var(--muted); font-size:18px; margin:0 0 18px; }
+    .hero h1 { font-size:56px; margin:0 0 8px; color:#fff; line-height: 1.1; }
+    .hero p { color:var(--muted); font-size:15px; margin:0 0 18px; }
     .typing-cursor { display:inline-block; width:2px; height:1.2em; background:var(--accent); vertical-align:middle; animation:blink 1s infinite; margin-left:2px; }
     @keyframes blink { 0%, 50% { opacity:1; } 51%, 100% { opacity:0; } }
     .typing-text-container { display:inline-flex; align-items:center; }
@@ -264,7 +264,7 @@
 
     /* Section & cards */
     section { margin-bottom:28px; }
-    section > h2 { font-size:20px; color:#dff6ef; margin-bottom:12px; }
+    section > h2 { font-size:36px; color:#dff6ef; margin-bottom:12px; font-weight:700; }
     .card { 
       background: var(--card-glass);
       padding:18px; 
@@ -338,7 +338,7 @@
       border-color: var(--card-hover-border);
     }
     .skill-category h3 { 
-      font-size:16px; 
+      font-size:20px; 
       color:#fff; 
       margin:0 0 20px; 
       padding:12px 16px;
@@ -409,8 +409,8 @@
       border-color: var(--card-hover-border);
     }
     .project-card:hover::before { transform: scaleX(1); }
-    .project-card h3 { color:#fff; margin:0 0 10px; font-size:16px; }
-    .project-card p { color:var(--text-muted); font-size:14px; margin:0 0 12px; line-height:1.5; }
+    .project-card h3 { color:#fff; margin:0 0 10px; font-size:20px; }
+    .project-card p { color:var(--text-muted); font-size:13px; margin:0 0 12px; line-height:1.5; }
     .tech-stack { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
     .tech-badge { 
       font-size:11px; 
@@ -482,7 +482,7 @@
       box-shadow: var(--shadow-glass-hover);
       border-color: var(--card-hover-border);
     }
-    .achievement-card h4 { margin:0 0 6px; color:var(--accent); }
+    .achievement-card h4 { margin:0 0 6px; font-size:18px; color:var(--accent); }
 
     /* Blocks under certificates heading */
     .cert-blocks{ display:flex; gap:10px; flex-wrap:wrap; margin:8px 0 12px 0; }
@@ -530,13 +530,13 @@
       display:block;
     }
     .contact-card h3 { 
-      font-size:14px; 
+      font-size:20px; 
       color:#fff; 
       margin:0 0 8px;
     }
     .contact-card a, .contact-card p { 
       color:var(--text-muted); 
-      font-size:14px; 
+      font-size:13px; 
       margin:0; 
       text-decoration:none;
     }
@@ -560,8 +560,8 @@
     @media (max-width:768px) {
       .container { padding:16px; }
       .hero { padding:32px 0; }
-      .hero h1 { font-size:32px; }
-      .hero p { font-size:16px; }
+      .hero h1 { font-size:40px; }
+      .hero p { font-size:14px; }
       nav { display:none; }
       .hamburger { display:flex; }
       .logo { font-size:18px; }
@@ -831,29 +831,6 @@
             <div class="achievement-card">
               <h4>Internship Completion</h4>
               <p>Completed a 45-day internship at Code Arrest Pvt. Ltd., contributing to web development tasks.</p>
-            </div>
-            <div class="achievement-card">
-              <h4>Open Source Contributions</h4>
-              <p>Contributed to multiple open-source projects, improving code quality and adding features.</p>
-            </div>
-          </div>
-      </div>
-    </section>
-    .project-details {
-      display: none;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid rgba(78, 224, 194, 0.15);
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--text-muted);
-      animation: fadeIn 0.3s ease;
-    }
-    .project-card:hover .project-details {
-      display: block;
-    }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-    .project-card:hover::before { transform: scaleX(1); }
             </div>
             <div class="achievement-card">
               <h4>Open Source Contributions</h4>
