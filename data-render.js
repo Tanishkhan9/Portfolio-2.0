@@ -40,11 +40,24 @@ async function loadSkills() {
       // append items to existing category
       const catEl = Array.from(container.querySelectorAll('.skill-category')).find(el => el.querySelector('h3').textContent.trim() === category.category);
       if (catEl) {
+        // Collect existing skill names to avoid duplicates
+        const existingSkillNames = Array.from(catEl.querySelectorAll('.skill-name span:nth-child(2)')).map(span => span.textContent.trim());
+        
         category.items.forEach(item => {
-          const skillItem = document.createElement('div');
-          skillItem.className = 'skill-item';
-          skillItem.innerHTML = `\n            <div class="skill-name">\n              <span>${item.name}</span>\n              <span>${item.level}</span>\n            </div>\n            <div class="skill-bar">\n              <div class="skill-progress" style="width: ${item.level};"></div>\n            </div>`;
-          catEl.appendChild(skillItem);
+          if (!existingSkillNames.includes(item.name)) {
+            const skillItem = document.createElement('div');
+            skillItem.className = 'skill-item';
+            skillItem.innerHTML = `
+              <div class="skill-name">
+                <i class="fas fa-chevron-right skill-icon"></i>
+                <span>${item.name}</span>
+                <span class="skill-percentage">${item.level}</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-progress" style="width: ${item.level};"></div>
+              </div>`;
+            catEl.appendChild(skillItem);
+          }
         });
       }
     } else {
@@ -57,7 +70,15 @@ async function loadSkills() {
       category.items.forEach(item => {
         const skillItem = document.createElement('div');
         skillItem.className = 'skill-item';
-        skillItem.innerHTML = `\n          <div class="skill-name">\n            <span>${item.name}</span>\n            <span>${item.level}</span>\n          </div>\n          <div class="skill-bar">\n            <div class="skill-progress" style="width: ${item.level};"></div>\n          </div>`;
+        skillItem.innerHTML = `
+          <div class="skill-name">
+            <i class="fas fa-chevron-right skill-icon"></i>
+            <span>${item.name}</span>
+            <span class="skill-percentage">${item.level}</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-progress" style="width: ${item.level};"></div>
+          </div>`;
         cat.appendChild(skillItem);
       });
       container.appendChild(cat);
